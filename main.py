@@ -8,7 +8,10 @@ page = '''<div id="top_bin"> <div id="top_content" class="width960">
 
 # start_link contains the value of the first position on the page that contains a link
 start_link = page.find('<a href=')
+start_quote = page.find('"',start_link)
+end_quote = page.find('"',start_quote + 1)
+url = page[start_quote+1:end_quote]
 
 
 # Print results of start_link
-print start_link
+print url
