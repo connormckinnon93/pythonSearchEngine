@@ -3,10 +3,7 @@
 # where the first '<a href=' occurs in a page.
 
 # WEB CRAWLER 
-# LESSON 2
-
-# Page contents provided by udacity instructor
-page = '''<div id="top_bin"> <div id="top_content" class="width960"><div class="udacity float-left"> <a href="/">'''
+# LESSON 3
 
 # start_link contains the value of the first position on the page that contains a link
 def get_next_target(S):
@@ -18,16 +15,18 @@ def get_next_target(S):
     url = S[start_quote+1:end_quote]
     return url, end_quote
 
-def print_all_links(S):
+def get_all_links(S):
+    links = []
     while True:
         url, endpos = get_next_target(S)
         if url:
-            print url
+            links.append(url)
             S = S[endpos:]
         else:
             break
+    return links
 
 # Print results of start_link
 # get_page defined in Lesson 4
-print print_all_links(get_page('http://xkcd.com/353'))
+print get_all_links(get_page('http://xkcd.com/353'))
 
