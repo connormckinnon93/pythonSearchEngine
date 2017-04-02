@@ -2,6 +2,9 @@
 # start_link to be the value of the position
 # where the first '<a href=' occurs in a page.
 
+# WEB CRAWLER 
+# LESSON 1
+
 # Page contents provided by udacity instructor
 page = '''<div id="top_bin"> <div id="top_content" class="width960">
    <div class="udacity float-left"> <a href="/">'''
