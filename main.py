@@ -52,7 +52,7 @@ def crawl_web(seed):
         # Update eventually with first link searched instead of last link searched
         page = to_crawl.pop()
         if(page not in crawled):
-            content = get_page("http://xkcd.com/353")
+            content = get_page(page)
             add_page_to_index(index, page, content)
             union(to_crawl, get_all_links(content))
             crawled.append(page)
@@ -78,6 +78,43 @@ def add_page_to_index(index, url, content):
     words = content.split()
     for word in words:
         add_to_index(index, word, url)
-        
-print crawl_web([])
+
+# Create a better hash function
+def hash_string(keyword,buckets):
+    b = 0
+    for c in keyword:
+        b = b + ord(c)
+    return b % buckets
+
+def make_hashtable(nbuckets):
+    table = []
+    for i in range(0,nbuckets):
+        table.append([])
+    return table
+
+def hashtable_get_bucket(htable,keyword):
+    return htable[hash_string(keyword,len(htable))]
+
+def hashtable_add(htable, key, value):
+    hashtable_get_bucket(htable, key).append([key,value])
+    return htable
+
+
+# Make a method out of repeated code
+def hashtable_lookup(htable,key):
+    bucket = hashtable_get_bucket(htable, key)
+    for content in bucket:
+        if content[0] == key:
+            return content[1]
+    return None
+
+def hashtable_update(htable, key, value):
+    bucket = hashtable_get_bucket(htable, key)
+    for content in bucket:
+        if content[0] == key:
+            entry[1] = value
+            return htable
+    bucket.append([key, value])
+
+print crawl_web(["http://xkcd.com/353"])
 
