@@ -65,7 +65,15 @@ def add_to_index(index,keyword,url):
     index.append([keyword,[url]])
     return index
 
-# Print results of start_link
-# get_page defined in Lesson 4
-print get_all_links(get_page('http://xkcd.com/353'))
+def lookup(index,keyword):
+    for entry in index:
+        if entry[0] == keyword:
+            return entry[1]
+    return []
+
+
+def add_page_to_index(index, url, content):
+    words = content.split()
+    for word in words:
+        add_to_index(index, word, url)
 
