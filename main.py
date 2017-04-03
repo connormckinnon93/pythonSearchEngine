@@ -74,6 +74,7 @@ def lookup(index,keyword):
 
 
 def add_page_to_index(index, url, content):
+    # Improve keyword finding ability
     words = content.split()
     for word in words:
         add_to_index(index, word, url)
