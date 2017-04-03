@@ -57,6 +57,14 @@ def crawl_web(seed):
             crawled.append(page)
     return crawled
 
+def add_to_index(index,keyword,url):
+    for entry in index:
+        if entry[0] == keyword:
+            entry[1].append(url)
+            return index
+    index.append([keyword,[url]])
+    return index
+
 # Print results of start_link
 # get_page defined in Lesson 4
 print get_all_links(get_page('http://xkcd.com/353'))
