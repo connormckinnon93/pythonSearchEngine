@@ -49,13 +49,16 @@ def get_all_links(S):
 def crawl_web(seed):
     to_crawl = [seed]
     crawled = []
+    index=[]
     while to_crawl:
         # Update eventually with first link searched instead of last link searched
         page = to_crawl.pop()
         if(page not in crawled):
-            union(to_crawl, get_all_links(get_page(page)))
+            content = get_page("http://xkcd.com/353")
+            add_page_to_index(index, page, content)
+            union(to_crawl, get_all_links(content))
             crawled.append(page)
-    return crawled
+    return index
 
 def add_to_index(index,keyword,url):
     for entry in index:
@@ -76,4 +79,6 @@ def add_page_to_index(index, url, content):
     words = content.split()
     for word in words:
         add_to_index(index, word, url)
+        
+print crawl_web([])
 
