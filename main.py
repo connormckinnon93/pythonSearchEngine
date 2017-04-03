@@ -47,7 +47,7 @@ def get_all_links(S):
 def crawl_web(seed):
     to_crawl = [seed]
     crawled = []
-    index=[]
+    index={}
     while to_crawl:
         # Update eventually with first link searched instead of last link searched
         page = to_crawl.pop()
@@ -59,18 +59,15 @@ def crawl_web(seed):
     return index
 
 def add_to_index(index,keyword,url):
-    for entry in index:
-        if entry[0] == keyword:
-            entry[1].append(url)
-            return index
-    index.append([keyword,[url]])
-    return index
-
-def lookup(index,keyword):
-    for entry in index:
-        if entry[0] == keyword:
-            return entry[1]
-    return []
+    if keyword in index:
+        index[keyword].append(url)
+    else:
+        index[keyword] = [url]
+        
+def lookup(index, keyword):
+    if keyword in index:
+        return index[keyword]
+    return None
 
 
 def add_page_to_index(index, url, content):
@@ -78,43 +75,6 @@ def add_page_to_index(index, url, content):
     words = content.split()
     for word in words:
         add_to_index(index, word, url)
-
-# Create a better hash function
-def hash_string(keyword,buckets):
-    b = 0
-    for c in keyword:
-        b = b + ord(c)
-    return b % buckets
-
-def make_hashtable(nbuckets):
-    table = []
-    for i in range(0,nbuckets):
-        table.append([])
-    return table
-
-def hashtable_get_bucket(htable,keyword):
-    return htable[hash_string(keyword,len(htable))]
-
-def hashtable_add(htable, key, value):
-    hashtable_get_bucket(htable, key).append([key,value])
-    return htable
-
-
-# Make a method out of repeated code
-def hashtable_lookup(htable,key):
-    bucket = hashtable_get_bucket(htable, key)
-    for content in bucket:
-        if content[0] == key:
-            return content[1]
-    return None
-
-def hashtable_update(htable, key, value):
-    bucket = hashtable_get_bucket(htable, key)
-    for content in bucket:
-        if content[0] == key:
-            entry[1] = value
-            return htable
-    bucket.append([key, value])
 
 print crawl_web(["http://xkcd.com/353"])
 
