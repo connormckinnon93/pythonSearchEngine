@@ -47,16 +47,19 @@ def get_all_links(S):
 def crawl_web(seed):
     to_crawl = [seed]
     crawled = []
-    index={}
+    index = {}
+    graph = {}
     while to_crawl:
         # Update eventually with first link searched instead of last link searched
         page = to_crawl.pop()
         if(page not in crawled):
             content = get_page(page)
             add_page_to_index(index, page, content)
-            union(to_crawl, get_all_links(content))
+            outlinks = get_all_links(content)
+            graph[page] = outlinks
+            union(to_crawl, outlinks)
             crawled.append(page)
-    return index
+    return index, graph
 
 def add_to_index(index,keyword,url):
     if keyword in index:
@@ -75,6 +78,28 @@ def add_page_to_index(index, url, content):
     words = content.split()
     for word in words:
         add_to_index(index, word, url)
+        
+def compute_ranks(graph):
+    d = 0.8 # damping factor
+    num_loops = 10 # arbitrary, but decent
+    ranks = {}
 
-print crawl_web(["http://xkcd.com/353"])
+    npages = len(graph) # nodes in the graph
+    for page in graph:
+        ranks[page] = 1.0 / npages
+
+    for i in range(0, num_loops):
+        new_ranks = {}
+        for page in graph:
+            newrank = (1 - d) / npages
+            newrank += sum([d *ranks[node] / len(graph[node]) for node in graph if page in graph[node]])
+            new_ranks[page] = newrank
+        ranks = new_ranks
+    return ranks
+
+index, graph = crawl_web("https://www.udacity.com/cs101x/urank/index.html")
+ranks = compute_ranks(graph)
+print index
+print "/n"
+print ranks
 
